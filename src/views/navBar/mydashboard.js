@@ -19,7 +19,7 @@ const CustomDrawerContent = (props) => {
   const menuItems = [
     { name: "Dashboard", icon: "home" }, 
     { name: "Profile", icon: "account-circle" }, 
-    { name: "Gallery", icon: "gallery" }, 
+    { name: "Gallery", icon: "view-gallery" }, 
     { name: "Setting", icon: "cog-outline" }, 
     { name: "ImageCarousel", icon: "cog-outline" }, 
   ];
