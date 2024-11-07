@@ -12,6 +12,7 @@ import Dashboard from "../dashboard/Dashboard";
 // import ImageCarousel from "../imageCarousel";
 import Profile from "../profile/index";
 import GalleryDashboard from "../Gallery";
+import AvDownload from '../AvDownload';
 const Drawer = createDrawerNavigator();
 
 
@@ -20,6 +21,7 @@ const CustomDrawerContent = (props) => {
     { name: "Dashboard", icon: "home" }, 
     { name: "Profile", icon: "account-circle" }, 
     { name: "Gallery", icon: "view-gallery" }, 
+    { name: "AvDownload", icon: "download" }, 
     { name: "Setting", icon: "cog-outline" }, 
     { name: "ImageCarousel", icon: "cog-outline" }, 
   ];
@@ -60,6 +62,7 @@ const NavBar = (props) => {
       <Drawer.Screen name="Dashboard" component={Dashboard} />
       <Drawer.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
       <Drawer.Screen name="Gallery" component={GalleryDashboard} options={{ headerShown: false }} />
+      <Drawer.Screen name="AvDownload" component={AvDownload}  />
       {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
     </Drawer.Navigator>
   );
