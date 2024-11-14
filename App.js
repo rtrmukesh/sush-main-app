@@ -11,6 +11,7 @@ import Mydashboard from "./src/views/navBar/mydashboard";
 import Profile from './src/views/profile';
 import GalleryDashboard from './src/views/Gallery';
 import AvDownload from './src/views/AvDownload';
+import AudioToVideo from './src/views/AudioToVideo';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -27,8 +28,8 @@ export default function App() {
           <Stack.Screen name='mydashboard' component={Mydashboard} />
           <Stack.Screen name='profile' component={Profile} />
           <Stack.Screen name='AvDownload' component={AvDownload} />
-           {/*<Stack.Screen name='CCTV' component={CCTVPage} />
-          <Stack.Screen name='Setting' component={Setting} />
+            {/* <Stack.Screen name='AudioToVideo' component={AudioToVideo} /> */}
+         {/* <Stack.Screen name='Setting' component={Setting} />
           <Stack.Screen name='CheckMobile' component={CheckMobileNumber} />
           <Stack.Screen name='ImageCarousel' component={ImageCarousel} /> */}
           <Stack.Screen name='Gallery' component={GalleryDashboard} />
