@@ -13,6 +13,8 @@ import Dashboard from "../dashboard/Dashboard";
 import Profile from "../profile/index";
 import GalleryDashboard from "../Gallery";
 import AvDownload from '../AvDownload';
+import { version } from "../../../package.json"
+import AudioToVideo from '../AudioToVideo';
 const Drawer = createDrawerNavigator();
 
 
@@ -22,8 +24,7 @@ const CustomDrawerContent = (props) => {
     { name: "Profile", icon: "account-circle" }, 
     { name: "Gallery", icon: "view-gallery" }, 
     { name: "AvDownload", icon: "download" }, 
-    { name: "Setting", icon: "cog-outline" }, 
-    { name: "ImageCarousel", icon: "cog-outline" }, 
+    { name: "AudioToVideo", icon: "audio-video" }, 
   ];
 
 
@@ -52,6 +53,21 @@ const CustomDrawerContent = (props) => {
         </View>
       </View>
       <CustomDrawerItem menuItems={menuItems} navigation={props.navigation}/>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 10,
+          justifyContent: "center",
+          borderTopWidth: 1,
+          borderTopColor: "gray",
+          marginTop: 2,
+        }}
+      >
+        <View>
+            <Text style={{ fontWeight: "bold" }}>{`Version: ${version}`}</Text>
+          </View>
+      </View>
     </DrawerContentScrollView>
   );
 };
@@ -63,6 +79,7 @@ const NavBar = (props) => {
       <Drawer.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
       <Drawer.Screen name="Gallery" component={GalleryDashboard} options={{ headerShown: false }} />
       <Drawer.Screen name="AvDownload" component={AvDownload}  />
+      {/* <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  /> */}
       {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
     </Drawer.Navigator>
   );
