@@ -1,44 +1,49 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CustomCard from '../../../components/Card';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AddressCard = (props) => {
   const [location, setLocation] = useState(null);
-  const [detail, setDetail] = useState({});
+  const [detail, setDetail] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-
-      const { latitude, longitude } = location.coords;
-
-      fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-        {
-          headers: {
-            'User-Agent': 'Sush/1.0',
-            'Accept': 'application/json'
-          }
-        }
-      )
-        .then(response => response.json())
-        .then(data => {
-          setDetail(data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    })();
+    fetchMapData()
   }, []);
+
+  const fetchMapData=async ()=>{
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return;
+    }
+    setIsRefreshing(true)
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+
+    const { latitude, longitude } = location.coords;
+
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+      {
+        headers: {
+          'User-Agent': 'Sush/1.0',
+          'Accept': 'application/json'
+        }
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        setDetail(data);
+        setIsRefreshing(false)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsRefreshing(false)
+      });
+  }
 
   const openMap = () => {
     if (location) {
@@ -47,10 +52,11 @@ const AddressCard = (props) => {
       Linking.openURL(url);
     }
   };
-
+  
   return (
+   
     <View>
-      <CustomCard title={"Address"}>
+      <CustomCard title={"Address"} onRefresh={fetchMapData} isRefreshing={isRefreshing}>
         <View style={styles.childran}>
           <View style={styles.row}>
             <Text style={styles.boldText}>Latitude:</Text>

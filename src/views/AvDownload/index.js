@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import React, { useState } from "react";
@@ -14,23 +15,26 @@ import {
 } from "react-native";
 import * as Progress from "react-native-progress";
 import MediaService from "../../../services/MediaService";
+import DotLoading from "../../MyComponents/DotLoading";
 
 const AvDownload = () => {
   const [url, setUrl] = useState("");
   const [qualities, setQualities] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-
+  const [loading, setLoading] = useState(false); 
   const fetchQualities = async () => {
+    setLoading(true)
     try {
       await MediaService.getQuality(url, (res) => {
         const categorizedQualities = categorizeQualities(res?.data?.qualities);
         setQualities(categorizedQualities);
         setModalVisible(true);
+        setLoading(false)
       });
     } catch (error) {
       console.error("Error fetching qualities:", error);
-    }
+    } 
   };
 
   const categorizeQualities = (qualities) => {
@@ -90,9 +94,16 @@ const AvDownload = () => {
     setDownloadProgress(0);
   };
 
+  const pasteClipboardUrl = async () => {
+    const clipboardContent = await Clipboard.getStringAsync();
+    setUrl(clipboardContent);
+  };
+
   const clearInput = () => {
     setUrl("");
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -103,14 +114,22 @@ const AvDownload = () => {
           onChangeText={setUrl}
           style={styles.input}
         />
-        {url.length > 0 && (
+        {url.length > 0 ? (
           <TouchableOpacity onPress={clearInput} style={styles.clearButton}>
             <Ionicons name="close-circle" size={24} color="gray" />
           </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={pasteClipboardUrl} style={styles.pasteButton}>
+            <Ionicons name="clipboard" size={24} color="gray" />
+          </TouchableOpacity>
         )}
       </View>
-      <TouchableOpacity style={styles.fetchButton} onPress={fetchQualities}>
-        <Text style={styles.fetchButtonText}>Get Quality</Text>
+      <TouchableOpacity
+        style={[styles.fetchButton, loading && styles.disabledButton]} // Add a disabled style
+        onPress={fetchQualities}
+        disabled={loading} 
+      >
+        {loading ? <DotLoading /> : <Text style={styles.fetchButtonText}>Get Quality</Text>}
       </TouchableOpacity>
 
       <Modal
@@ -147,7 +166,6 @@ const AvDownload = () => {
         </View>
       </Modal>
 
-      {/* Download Progress */}
       {downloadProgress > 0 && (
         <View style={styles.progressContainer}>
           <Progress.Bar
@@ -174,16 +192,28 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#f9f9f9",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
   },
   input: {
     flex: 1,
-    padding: 10,
-    borderBottomWidth: 1,
-    marginBottom: 16,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: "#333",
   },
   clearButton: {
-    padding: 10,
-    marginLeft: 8,
+    padding: 8,
+  },
+  pasteButton: {
+    padding: 8,
   },
   fetchButton: {
     marginTop: 20,
@@ -258,6 +288,9 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 14,
     color: "#555",
+  },
+  disabledButton: {
+    backgroundColor: "#6200ee", 
   },
 });
 

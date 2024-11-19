@@ -27,6 +27,7 @@
     "link": "^2.1.1",
     "lottie-react-native": "6.7.0",
     "react": "18.2.0",
+    "react-content-loader": "^7.0.2",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
     "react-native-animated-scroll-modal": "^0.7.1",
@@ -48,7 +49,8 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.12",
     "react-social-icons": "^6.18.0",
-    "react-spring": "^9.7.4"
+    "react-spring": "^9.7.4",
+    "expo-clipboard": "~6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
