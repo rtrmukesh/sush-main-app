@@ -1,29 +1,45 @@
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Card, Title } from "react-native-paper";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Card, Title } from "react-native-paper";
 import { Color } from "../helper/Color";
 import Divider from "./Divider";
 import Link from "./Link";
+import ListCustomLoader from "./ListCustomLoader";
 
 const CustomCard = ({
   title,
   children,
   rightContent,
   showViewAll,
-  onPress,
   viewAllHander,
+  onRefresh,
+  isRefreshing
 }) => {
+
+  const handleRefresh = async () => {
+    if (onRefresh) await onRefresh(); 
+  };
+
   return (
     <Card style={styles.card}>
       <View style={styles.cardHeader}>
         {title && <Title style={styles.title}>{title}</Title>}
-        {rightContent && (
-          <Text style={styles.rightContent}>{rightContent}</Text>
-        )}
-        {showViewAll && <Link title="View All" onPress={viewAllHander} />}
+        <View style={styles.rightSection}>
+          {rightContent && <Text style={styles.rightContent}>{rightContent}</Text>}
+          {onRefresh && <TouchableOpacity onPress={handleRefresh}>
+            {isRefreshing ? (
+              <ActivityIndicator size="small" color={Color.ACTIVE} />
+            ) : (
+              <Ionicons name="refresh-circle" size={28} color="gray" />
+            )}
+          </TouchableOpacity>}
+          {showViewAll && <Link title="View All" onPress={viewAllHander} />}
+        </View>
       </View>
       {title && <Divider />}
-      <Card.Content>{children}</Card.Content>
+      {isRefreshing ? <ListCustomLoader /> :
+        <Card.Content>{children}</Card.Content>}
     </Card>
   );
 };
@@ -42,13 +58,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth:1,
-    borderBottomColor:"#E5E4E2"
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E4E2",
   },
   title: {
     fontWeight: "bold",
     fontSize: 18,
     paddingLeft: 15,
+  },
+  rightSection: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   rightContent: {
     fontWeight: "bold",
