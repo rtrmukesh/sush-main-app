@@ -15,6 +15,7 @@ import GalleryDashboard from "../Gallery";
 import AvDownload from '../AvDownload';
 import { version } from "../../../package.json"
 import AudioToVideo from '../AudioToVideo';
+import AlbumImage from '../Gallery/components/AlbumImage';
 const Drawer = createDrawerNavigator();
 
 
@@ -78,6 +79,7 @@ const NavBar = (props) => {
       <Drawer.Screen name="Dashboard" component={Dashboard} />
       <Drawer.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
       <Drawer.Screen name="Gallery" component={GalleryDashboard} options={{ headerShown: false }} />
+      <Drawer.Screen name="AlbumImage" component={AlbumImage} options={{ headerShown: false }} />
       <Drawer.Screen name="AvDownload" component={AvDownload}  />
       {/* <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  /> */}
       {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
