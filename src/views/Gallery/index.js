@@ -1,27 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Image, TouchableOpacity, Text, Dimensions, Modal, Button, Alert, AppState } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
-import { MaterialIcons } from '@expo/vector-icons'; // For the 3-dot menu icon
-import Layout from '../../MyComponents/Layout';
-import DeleteConfirmationModal from '../../components/Modal/DeleteConfirmationModal';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+  Modal,
+  Button,
+  Alert,
+  AppState,
+} from "react-native";
+import * as MediaLibrary from "expo-media-library";
+import { MaterialIcons } from "@expo/vector-icons"; // For the 3-dot menu icon
+import Layout from "../../MyComponents/Layout";
+import DeleteConfirmationModal from "../../components/Modal/DeleteConfirmationModal";
+import { useNavigation } from "@react-navigation/native";
 
 const GalleryDashboard = () => {
   const [albums, setAlbums] = useState([]);
   const [numColumns, setNumColumns] = useState(3);
-  const [key, setKey] = useState('numColumns-3');
+  const [key, setKey] = useState("numColumns-3");
   const [selectedAlbum, setSelectedAlbum] = useState(null); // Store the selected album for deletion
   const [isModalVisible, setModalVisible] = useState(false); // For confirmation modal
+  const navigation = useNavigation();
 
   useEffect(() => {
     const requestPermission = async () => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status === 'granted') {
+      if (status === "granted") {
         fetchAlbums();
       }
     };
 
     const updateNumColumns = () => {
-      const screenWidth = Dimensions.get('window').width;
+      const screenWidth = Dimensions.get("window").width;
       let columns = 3;
       if (screenWidth < 400) {
         columns = 2;
@@ -35,14 +49,13 @@ const GalleryDashboard = () => {
     };
 
     updateNumColumns();
-    Dimensions.addEventListener('change', updateNumColumns);
+    Dimensions.addEventListener("change", updateNumColumns);
     requestPermission();
 
     AppState.addEventListener("change", handleAppStateChange);
 
-
     return () => {
-      Dimensions.removeEventListener('change', updateNumColumns);
+      Dimensions.removeEventListener("change", updateNumColumns);
       if (AppState.removeEventListener) {
         AppState.removeEventListener("change", handleAppStateChange);
       }
@@ -52,12 +65,10 @@ const GalleryDashboard = () => {
   const handleAppStateChange = (nextAppState) => {
     if (nextAppState === "active") {
       setTimeout(async () => {
-        await fetchAlbums()
+        await fetchAlbums();
       }, 1000);
     }
   };
-
-
 
   const fetchAlbums = async () => {
     const albums = await MediaLibrary.getAlbumsAsync();
@@ -65,11 +76,11 @@ const GalleryDashboard = () => {
       albums.map(async (album) => {
         const photoCount = await MediaLibrary.getAssetsAsync({
           album: album.id,
-          mediaType: ['photo'],
+          mediaType: ["photo"],
         });
         const videoCount = await MediaLibrary.getAssetsAsync({
           album: album.id,
-          mediaType: ['video'],
+          mediaType: ["video"],
         });
         const totalMedia = photoCount.totalCount + videoCount.totalCount;
 
@@ -86,25 +97,27 @@ const GalleryDashboard = () => {
   };
 
   const deleteAlbum = async (albumId) => {
-    console.log('Attempting to delete album with ID: ', albumId);
+    console.log("Attempting to delete album with ID: ", albumId);
     try {
-        const result = await MediaLibrary.deleteAlbumsAsync([albumId], true); // true to delete assets on iOS
-        if (result) {
-            console.log('Album deleted successfully:', result);
-            await fetchAlbums(); // Refresh the albums list
-        } else {
-            console.log('Album deletion failed');
-            Alert.alert('Error', 'Failed to delete the album. It might be a system album.');
-        }
+      const result = await MediaLibrary.deleteAlbumsAsync([albumId], true); // true to delete assets on iOS
+      if (result) {
+        console.log("Album deleted successfully:", result);
+        await fetchAlbums(); // Refresh the albums list
+      } else {
+        console.log("Album deletion failed");
+        Alert.alert(
+          "Error",
+          "Failed to delete the album. It might be a system album."
+        );
+      }
     } catch (error) {
-        console.error("Error deleting album:", error);
-        Alert.alert('Error', 'Failed to delete the album. It might be a system album or in use.');
+      console.error("Error deleting album:", error);
+      Alert.alert(
+        "Error",
+        "Failed to delete the album. It might be a system album or in use."
+      );
     }
-};
-
-  
-  
-  console.log('albums>>>------------------------> ', albums);
+  };
 
   const confirmDelete = (album) => {
     setSelectedAlbum(album);
@@ -113,9 +126,13 @@ const GalleryDashboard = () => {
 
   const renderAlbum = ({ item }) => (
     <View style={styles.album}>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("AlbumImage", { albumId: item?.id });
+        }}
+      >
         <Image
-          source={{ uri: item.cover || 'default_image_uri' }}
+          source={{ uri: item.cover || "default_image_uri" }}
           style={styles.albumImage}
         />
       </TouchableOpacity>
@@ -135,7 +152,7 @@ const GalleryDashboard = () => {
       </TouchableOpacity>
     </View>
   );
-console.log('selectedAlbum>>>------------------------> ', selectedAlbum);
+
   return (
     <Layout HeaderLabel={"My Gallery"}>
       <View style={styles.container}>
@@ -151,12 +168,12 @@ console.log('selectedAlbum>>>------------------------> ', selectedAlbum);
 
       {/* Delete confirmation modal */}
       {selectedAlbum && (
-           <DeleteConfirmationModal
-           modalVisible={isModalVisible}
-           toggle={() => setModalVisible(false)}
-           updateAction={() => deleteAlbum(selectedAlbum?.id)}
-           id={selectedAlbum?.title}
-       />
+        <DeleteConfirmationModal
+          modalVisible={isModalVisible}
+          toggle={() => setModalVisible(false)}
+          updateAction={() => deleteAlbum(selectedAlbum?.id)}
+          id={selectedAlbum?.title}
+        />
       )}
     </Layout>
   );
@@ -165,7 +182,7 @@ console.log('selectedAlbum>>>------------------------> ', selectedAlbum);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
     padding: 10,
   },
   albumList: {
@@ -174,73 +191,73 @@ const styles = StyleSheet.create({
   album: {
     flex: 1,
     margin: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
-    position: 'relative', // For positioning menu icon
+    position: "relative", // For positioning menu icon
   },
   albumImage: {
-    width: '100%',
+    width: "100%",
     height: 120,
     borderRadius: 10,
     marginBottom: 10,
   },
   albumTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   mediaCountsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 5,
   },
   mediaCount: {
     fontSize: 12,
-    color: '#6c757d',
+    color: "#6c757d",
   },
   totalMediaCount: {
     fontSize: 12,
-    color: '#6c757d',
-    textAlign: 'center',
+    color: "#6c757d",
+    textAlign: "center",
     marginTop: 5,
   },
   menuIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
     width: 300,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   modalAlbumTitle: {
     fontSize: 14,
-    color: '#6c757d',
+    color: "#6c757d",
     marginBottom: 20,
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });
 

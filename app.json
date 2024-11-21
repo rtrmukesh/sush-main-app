@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sush.mainapp"
@@ -29,7 +31,11 @@
     },
     "web": {
       "favicon": "./assets/images/iconround.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dc123b24-d782-4853-b4e5-ecc6a56300dd"
+      }
     }
-   
   }
 }

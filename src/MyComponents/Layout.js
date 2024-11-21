@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons'; // You can use any icon l
 const { width } = Dimensions.get("window");
 
 const Layout = (props) => {
-  let { HeaderLabel="Mukesh Profile", footerContent, children, onBackPress, onSettingsPress, showFooter=true, showStatusBar=true, showHeader=true } = props;
+  let { HeaderLabel="Mukesh Profile", footerContent, children, onBackPress, onSettingsPress, showFooter=true, showStatusBar=true, showHeader=true, showSetting } = props;
   let navigation = useNavigation();
 
 
@@ -36,8 +36,8 @@ const Layout = (props) => {
 
           <Text style={styles.headerText}>{HeaderLabel}</Text>
 
-          <TouchableOpacity onPress={onSettingsPress} style={styles.iconContainer}>
-            <Icon name="settings" size={24} color="black" />
+          <TouchableOpacity onPress={ showSetting ? () => onSettingsPress():()=>{}} style={styles.iconContainer}>
+            {showSetting && <Icon name="settings" size={24} color="black" />}
           </TouchableOpacity>
         </View>}
 
