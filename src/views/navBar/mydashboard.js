@@ -10,14 +10,13 @@ import Dashboard from "../dashboard/Dashboard";
 // import CameraExample from "../samsungCameraIssue";
 // import CheckMobileNumber from "../checkMobBusyOrNot";
 // import ImageCarousel from "../imageCarousel";
-import Profile from "../profile/index";
-import GalleryDashboard from "../Gallery";
+import { version } from "../../../package.json";
 import AvDownload from '../AvDownload';
-import { version } from "../../../package.json"
-import AudioToVideo from '../AudioToVideo';
-import AlbumImage from '../Gallery/components/AlbumImage';
-import StatusSaver from '../StatusSaver';
 import CallLogScreen from '../CallLog';
+import GalleryDashboard from "../Gallery";
+import AlbumImage from '../Gallery/components/AlbumImage';
+import Profile from "../profile/index";
+import StatusSaver from '../StatusSaver';
 const Drawer = createDrawerNavigator();
 
 
@@ -28,8 +27,8 @@ const CustomDrawerContent = (props) => {
     { name: "Gallery", icon: "view-gallery" }, 
     { name: "AvDownload", icon: "download" }, 
     { name: "AudioToVideo", icon: "audio-video" }, 
-    { name: "StatusSaver", icon: "saver" }, 
-    { name: "CallLogScreen", icon: "call" }, 
+    { name: "StatusSaver", icon: "whatsapp" }, 
+    { name: "CallLogScreen", icon: "phone-log" }, 
   ];
 
 
