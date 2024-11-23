@@ -52,7 +52,6 @@ const AddressCard = (props) => {
       Linking.openURL(url);
     }
   };
-  
   return (
    
     <View>
@@ -76,11 +75,11 @@ const AddressCard = (props) => {
           </View>
           <View style={styles.row}>
             <Text style={styles.boldText}>City:</Text>
-            <Text style={styles.normalText}>{detail?.address?.county}</Text>
+            <Text style={styles.normalText}>{detail?.address?.city ? detail?.address?.city : detail?.address?.county}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.boldText}>Area:</Text>
-            <Text style={styles.normalText}>{detail?.address?.suburb}</Text>
+            <Text style={styles.normalText}>{detail?.address?.road ? detail?.address?.road :detail?.address?.suburb}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.boldText}>Postcode:</Text>

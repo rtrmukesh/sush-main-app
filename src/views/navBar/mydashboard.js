@@ -17,6 +17,7 @@ import { version } from "../../../package.json"
 import AudioToVideo from '../AudioToVideo';
 import AlbumImage from '../Gallery/components/AlbumImage';
 import StatusSaver from '../StatusSaver';
+import CallLogScreen from '../CallLog';
 const Drawer = createDrawerNavigator();
 
 
@@ -28,6 +29,7 @@ const CustomDrawerContent = (props) => {
     { name: "AvDownload", icon: "download" }, 
     { name: "AudioToVideo", icon: "audio-video" }, 
     { name: "StatusSaver", icon: "saver" }, 
+    { name: "CallLogScreen", icon: "call" }, 
   ];
 
 
@@ -84,6 +86,8 @@ const NavBar = (props) => {
       <Drawer.Screen name="AlbumImage" component={AlbumImage} options={{ headerShown: false }} />
       <Drawer.Screen name="AvDownload" component={AvDownload}  />
       <Drawer.Screen name="StatusSaver" component={StatusSaver}  />
+      <Drawer.Screen name="CallLogScreen" component={CallLogScreen} />
+
       {/* <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  /> */}
       {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
     </Drawer.Navigator>
