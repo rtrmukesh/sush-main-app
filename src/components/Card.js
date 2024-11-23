@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ActivityIndicator, Card, Title } from "react-native-paper";
+import { StyleSheet, Text, View } from "react-native";
+import { Card, Title } from "react-native-paper";
 import { Color } from "../helper/Color";
+import CustomSyncButton from "../MyComponents/CustomSyncButton";
 import Divider from "./Divider";
 import Link from "./Link";
 import ListCustomLoader from "./ListCustomLoader";
@@ -18,7 +18,7 @@ const CustomCard = ({
 }) => {
 
   const handleRefresh = async () => {
-    if (onRefresh) await onRefresh(); 
+    if (onRefresh) await onRefresh();
   };
 
   return (
@@ -27,13 +27,12 @@ const CustomCard = ({
         {title && <Title style={styles.title}>{title}</Title>}
         <View style={styles.rightSection}>
           {rightContent && <Text style={styles.rightContent}>{rightContent}</Text>}
-          {onRefresh && <TouchableOpacity onPress={handleRefresh}>
-            {isRefreshing ? (
-              <ActivityIndicator size="small" color={Color.ACTIVE} />
-            ) : (
-              <Ionicons name="refresh-circle" size={28} color="gray" />
-            )}
-          </TouchableOpacity>}
+          {onRefresh && <CustomSyncButton
+            handleSync={handleRefresh}
+            isLoading={isRefreshing}
+            showSyncButton
+          />
+          }
           {showViewAll && <Link title="View All" onPress={viewAllHander} />}
         </View>
       </View>
