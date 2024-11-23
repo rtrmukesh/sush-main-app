@@ -14,6 +14,7 @@ import AvDownload from './src/views/AvDownload';
 import AudioToVideo from './src/views/AudioToVideo';
 import AlbumImage from './src/views/Gallery/components/AlbumImage';
 import StatusSaver from './src/views/StatusSaver';
+import CallLogScreen from './src/views/CallLog';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
           <Stack.Screen name='Gallery' component={GalleryDashboard} />
           <Stack.Screen name='AlbumImage' component={AlbumImage} />
           <Stack.Screen name="StatusSaver" component={StatusSaver} />
+          <Stack.Screen name="CallLogScreen" component={CallLogScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>
