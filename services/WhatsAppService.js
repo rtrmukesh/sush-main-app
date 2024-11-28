@@ -3,9 +3,10 @@ import * as MediaLibrary from 'expo-media-library';
 
 class WhatsAppService {
     static STATUS_PATHS = [
-        // `${FileSystem.documentDirectory}WhatsApp/Media/.Statuses/`, // Old Path
-        // `${FileSystem.documentDirectory}Android/media/com.whatsapp/WhatsApp/Media/.Statuses/`, // New Path
-        "/storage/emulated/0/WhatsApp/Media/.Statuses/"
+        `${FileSystem.documentDirectory}WhatsApp/Media/.Statuses/`,
+        `${FileSystem.documentDirectory}Android/media/com.whatsapp/WhatsApp/Media/.Statuses/`,
+        "/storage/emulated/0/WhatsApp/Media/.Statuses/",
+        "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/"
     ];
 
     static async requestPermissions() {
@@ -31,7 +32,7 @@ class WhatsAppService {
                     }));
                 }
             } catch (error) {
-                console.warn(`Could not access path: ${statusFolder}`);
+                console.warn(`Could not access path: ${statusFolder}`, error.message);
             }
         }
 

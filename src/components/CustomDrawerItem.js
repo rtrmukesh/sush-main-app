@@ -1,6 +1,6 @@
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import React from 'react'
-import { TouchableOpacity, View , Text} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from 'react';
+import { Text, TouchableOpacity, View } from "react-native";
 
 function CustomDrawerItem(props) {
     let {menuItems}=props;
@@ -8,7 +8,10 @@ function CustomDrawerItem(props) {
     const renderCustomItem = (item, index) => (
         <TouchableOpacity
           key={index}
-          onPress={() => props.navigation.navigate(item.name)}
+          onPress={() => props.navigation.reset({
+            index: 0, 
+            routes: [{ name: item.name }], 
+          })}
           style={{ flexDirection: "row", alignItems: "center", padding: 20 }}
         >
             <MaterialCommunityIcons name={item.icon} size={25} color="black" />
