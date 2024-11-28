@@ -3,7 +3,7 @@ import {
   createDrawerNavigator
 } from '@react-navigation/drawer';
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, StatusBar, Text, View } from "react-native";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
 import Dashboard from "../dashboard/Dashboard";
 // import CCTVPage from "../Cctv";
@@ -46,6 +46,7 @@ const CustomDrawerContent = (props) => {
           marginBottom: 2,
         }}
       >
+        <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
         <View style={{ alignItems: "center", width: 100 }}>
           <Image
             source={require("../../../assets/images/sm.jpg")}
