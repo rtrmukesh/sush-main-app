@@ -26,7 +26,7 @@ const CustomDrawerContent = (props) => {
     { name: "Profile", icon: "account-circle" }, 
     { name: "Gallery", icon: "view-gallery" }, 
     { name: "AvDownload", icon: "download" }, 
-    { name: "AudioToVideo", icon: "audio-video" }, 
+    // { name: "AudioToVideo", icon: "audio-video" }, 
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
   ];

@@ -1,120 +1,131 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  Alert,
-  Image,
-  Dimensions,
-} from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
-import Layout from '../../../MyComponents/Layout';
-import ImageViewer from 'react-native-image-zoom-viewer';
-import debounce from 'lodash.debounce';
 import { useNavigation } from '@react-navigation/native';
-
+import * as MediaLibrary from 'expo-media-library';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  Alert,
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import Layout from '../../../MyComponents/Layout';
+import ListCustomLoader from '../../../components/ListCustomLoader';
 
 const AlbumImage = (props) => {
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  // Get screen width
   const screenWidth = Dimensions.get('window').width;
-  const columnCount = 3; // Number of columns in the grid
-  const imageSize = screenWidth / columnCount - 10; // Adjusting for padding/margin
+  const columnCount = 3;
+  const imageSize = screenWidth / columnCount - 10;
 
-  let navigation =  useNavigation()
-
-  useEffect(() => {
-    fetchAllImages(props.route.params.albumId);
-  }, [props?.route?.params?.albumId]);
-
-  const onMoveDebounced = useRef(
-    debounce((position) => {
-      console.log('Position updated:', position);
-    }, 100)
-  ).current;
+  const navigation = useNavigation();
 
   useEffect(() => {
-    return () => {
-      onMoveDebounced.cancel(); // Cleanup debounce on component unmount
-    };
-  }, [onMoveDebounced]);
+    fetchImages(props.route.params.albumId);
+  }, [props?.route?.params?.albumId,props?.route?.params?.date]);
 
-  const fetchAllImages = async (albumId) => {
+  const fetchImages = async (albumId) => {
+    if (loading) return; // Prevent multiple fetches at the same time
+    setLoading(true);
+
     try {
-      let allAssets = [];
-      let hasNextPage = true;
-      let after = null;
-
-      while (hasNextPage) {
+        // Fetch all assets in the album or the entire media library
         const response = await MediaLibrary.getAssetsAsync({
-          album: albumId,
-          mediaType: ['photo', 'video'], // Fetch both photos and videos
-          after: after, // Fetch the next set of assets
+            ...(albumId ? { album: albumId } : {}),
+            mediaType: ['photo', 'video'], // Fetch both photos and videos
+            first: 1000000, // Arbitrary large number to fetch all available assets
         });
 
-        allAssets = [...allAssets, ...response.assets];
-        hasNextPage = response?.hasNextPage || false;
-        after = response?.endCursor || null;
-      }
+        let filteredAssets = response.assets;
 
-      setImages(allAssets);
+        // If a specific date is passed, filter the assets by that date
+        if (props?.route?.params?.date) {
+            const targetDate = props?.route?.params?.date;
+            filteredAssets = filteredAssets.filter((asset) => {
+                const assetDate = new Date(asset.creationTime).toISOString().split("T")[0];
+                return assetDate === targetDate;
+            });
+        }
+
+        // Log creation and modification times for debugging
+        filteredAssets.forEach((asset) => {
+            const creationDate = new Date(asset.creationTime).toISOString();
+            const modificationDate = new Date(asset.modificationTime).toISOString();
+            console.log(`Asset: ${asset.filename}, Creation Time: ${creationDate}, Modification Time: ${modificationDate}`);
+        });
+
+        // Sort the filtered assets by creation time in descending order
+        filteredAssets.sort((a, b) => b.modificationTime - a.modificationTime);
+
+        console.log('Sorted Assets:', filteredAssets); // Debugging line
+        setImages(filteredAssets); // Set the images state with sorted assets
     } catch (error) {
-      console.error('Error fetching assets for the album:', error);
-      Alert.alert('Error', 'Failed to load images for the selected album.');
+        console.error('Error fetching assets:', error);
+        Alert.alert('Error', 'Failed to load images.');
     }
-  };
+
+    setLoading(false); // Stop the loading spinner
+};
+
+  
 
   const openImageModal = (index) => {
     setSelectedImageIndex(index);
     setModalVisible(true);
   };
 
+  const renderImage = useCallback(
+    ({ item, index }) => (
+      <TouchableOpacity onPress={() => openImageModal(index)}>
+        <Image
+          source={{ uri: item?.uri }}
+          style={[styles.image, { width: imageSize, height: imageSize }]}
+        />
+      </TouchableOpacity>
+    ),
+    [imageSize]
+  );
+
   return (
-    <Layout HeaderLabel={'My Gallery'} onBackPress={()=>{
-      navigation.navigate("Gallery")
-    }}>
-      <View style={styles.container}>
+    <Layout
+      HeaderLabel={props?.route?.params?.albumName}
+      onBackPress={() => navigation.navigate('Gallery')}
+    >
+      {loading ? <ListCustomLoader /> : <View style={styles.container}>
         <FlatList
           data={images}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity onPress={() => openImageModal(index)}>
-              <Image source={{ uri: item?.uri }} style={[styles.image, { width: imageSize, height: imageSize }]} />
-            </TouchableOpacity>
-          )}
+          renderItem={renderImage}
           keyExtractor={(item) => item?.id}
           numColumns={columnCount}
+          initialNumToRender={100000} 
+          windowSize={5} 
+          getItemLayout={(data, index) => ({
+            length: imageSize + 10,
+            offset: (imageSize + 10) * index,
+            index,
+          })}
         />
-      </View>
+      </View>}
 
       {/* Modal for zoomable images */}
       {modalVisible && (
         <Modal visible={modalVisible} transparent={true}>
-        <ImageViewer
-          imageUrls={images.map((img) => ({ url: img.uri }))}
-          index={selectedImageIndex}
-          enableSwipeDown
-          onSwipeDown={() => setModalVisible(false)}
-          onCancel={() => setModalVisible(false)}
-          enablePreload={true} // Preload images for smooth transitions
-          swipeDownThreshold={50} // Fine-tune swipe gesture sensitivity
-          renderIndicator={() => null} // Disable indicator to reduce rendering overhead
-          loadingRender={() => null} // Avoid rendering heavy loaders
-          maxOverflow={300} // Allow smoother swipe gestures
-          pageAnimateTime={150} // Adjust animation timing for smoother transitions
-          onMove={(position) => {
-            onMoveDebounced(position); // Use debounced function for onMove
-          }}
-        />
-      </Modal>
-
-)}
-
-
+          <ImageViewer
+            imageUrls={images.map((img) => ({ url: img.uri }))}
+            index={selectedImageIndex}
+            enableSwipeDown
+            onSwipeDown={() => setModalVisible(false)}
+            onCancel={() => setModalVisible(false)}
+          />
+        </Modal>
+      )}
     </Layout>
   );
 };

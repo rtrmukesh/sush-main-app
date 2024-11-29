@@ -29,7 +29,7 @@ const Layout = (props) => {
 
         {/* ✴---Header with Back Icon, Title, and Settings Icon---✴ */}
      {showHeader && <View style={styles.header}>
-          <TouchableOpacity onPress={()=> onBackPress ? onBackPress : navigation.goBack() } style={styles.iconContainer}>
+          <TouchableOpacity onPress={()=> onBackPress ? onBackPress() : navigation.goBack() } style={styles.iconContainer}>
           <Icon name="arrow-back" size={24} color="black" />
 
           </TouchableOpacity>
