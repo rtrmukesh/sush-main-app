@@ -29,52 +29,54 @@ const AlbumImage = (props) => {
 
   useEffect(() => {
     fetchImages(props.route.params.albumId);
-  }, [props?.route?.params?.albumId,props?.route?.params?.date]);
-
+  }, [props?.route?.params?.albumId, props?.route?.params?.date]);
   const fetchImages = async (albumId) => {
-    if (loading) return; // Prevent multiple fetches at the same time
+    if (loading) return;
     setLoading(true);
 
     try {
-        // Fetch all assets in the album or the entire media library
+      const batchSize = 50;
+      let allAssets = [];
+      let hasNextPage = true;
+      let nextPage = null;
+
+      while (hasNextPage) {
         const response = await MediaLibrary.getAssetsAsync({
-            ...(albumId ? { album: albumId } : {}),
-            mediaType: ['photo', 'video'], // Fetch both photos and videos
-            first: 1000000, // Arbitrary large number to fetch all available assets
+          ...(albumId ? { album: albumId } : {}),
+          mediaType: ['photo', 'video'],
+          first: batchSize,
+          after: nextPage,
         });
 
-        let filteredAssets = response.assets;
+        allAssets = allAssets.concat(response.assets);
 
-        // If a specific date is passed, filter the assets by that date
-        if (props?.route?.params?.date) {
-            const targetDate = props?.route?.params?.date;
-            filteredAssets = filteredAssets.filter((asset) => {
-                const assetDate = new Date(asset.creationTime).toISOString().split("T")[0];
-                return assetDate === targetDate;
-            });
-        }
+        nextPage = response.endCursor;
+        hasNextPage = response.hasNextPage;
+      }
 
-        // Log creation and modification times for debugging
-        filteredAssets.forEach((asset) => {
-            const creationDate = new Date(asset.creationTime).toISOString();
-            const modificationDate = new Date(asset.modificationTime).toISOString();
-            console.log(`Asset: ${asset.filename}, Creation Time: ${creationDate}, Modification Time: ${modificationDate}`);
+      let filteredAssets = allAssets;
+
+      if (props?.route?.params?.date) {
+        const targetDate = props?.route?.params?.date;
+        filteredAssets = filteredAssets.filter((asset) => {
+          const assetDate = new Date(asset.creationTime).toISOString().split("T")[0];
+          return assetDate === targetDate;
         });
+      }
 
-        // Sort the filtered assets by creation time in descending order
-        filteredAssets.sort((a, b) => b.modificationTime - a.modificationTime);
+      filteredAssets.sort((a, b) => b.modificationTime - a.modificationTime);
 
-        console.log('Sorted Assets:', filteredAssets); // Debugging line
-        setImages(filteredAssets); // Set the images state with sorted assets
+      setImages(filteredAssets);
     } catch (error) {
-        console.error('Error fetching assets:', error);
-        Alert.alert('Error', 'Failed to load images.');
+      console.error('Error fetching assets:', error);
+      Alert.alert('Error', 'Failed to load images.');
     }
 
-    setLoading(false); // Stop the loading spinner
-};
+    setLoading(false);
+  };
 
-  
+
+
 
   const openImageModal = (index) => {
     setSelectedImageIndex(index);
@@ -92,7 +94,6 @@ const AlbumImage = (props) => {
     ),
     [imageSize]
   );
-
   return (
     <Layout
       HeaderLabel={props?.route?.params?.albumName}
@@ -104,8 +105,10 @@ const AlbumImage = (props) => {
           renderItem={renderImage}
           keyExtractor={(item) => item?.id}
           numColumns={columnCount}
-          initialNumToRender={100000} 
-          windowSize={5} 
+          nestedScrollEnabled={true}
+          contentContainerStyle={{ padding: 5 }}
+          initialNumToRender={100000}
+          windowSize={5}
           getItemLayout={(data, index) => ({
             length: imageSize + 10,
             offset: (imageSize + 10) * index,

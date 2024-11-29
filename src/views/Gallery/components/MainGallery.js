@@ -49,64 +49,61 @@ const MainGallery = () => {
   const fetchAlbums = async () => {
     setLoading(true);
     try {
-      // Fetch all albums
+  
       const albumsData = await MediaLibrary.getAlbumsAsync();
-
-      const response = await MediaLibrary.getAssetsAsync({
+  
+      const mostRecentAssetResponse = await MediaLibrary.getAssetsAsync({
         mediaType: ["photo", "video"],
-        first: 1000000,
+        first: 1, 
+        sortBy: [MediaLibrary.SortBy.modificationTime], 
       });
-
-      let filteredAssets = response.assets;
-
-      const allMediaAssets = await Promise.all([
+  
+      const mostRecentAsset = mostRecentAssetResponse.assets[0];
+  
+      const [photosData, videosData] = await Promise.all([
         MediaLibrary.getAssetsAsync({ mediaType: "photo" }),
         MediaLibrary.getAssetsAsync({ mediaType: "video" }),
       ]);
-
-      const allPhotos = allMediaAssets[0];
-      const allVideos = allMediaAssets[1];
-
-      const allFiles = [...filteredAssets];
-
-      const sortedAllFiles = allFiles.sort(
-        (a, b) => b.modificationTime - a.modificationTime
-      );
-
+  
       const allFilesAlbum = {
         id: "all-files",
         title: "All Files",
-        cover: sortedAllFiles[0]?.uri || "https://via.placeholder.com/150",
-        totalImages: allPhotos.totalCount,
-        totalVideos: allVideos.totalCount,
+        cover: mostRecentAsset?.uri || "https://via.placeholder.com/150", 
+        totalImages: photosData.totalCount,
+        totalVideos: videosData.totalCount,
       };
-
+  
       const updatedAlbums = await Promise.all(
         albumsData.map(async (album) => {
-          const [images, videos] = await Promise.all([
+          const [imagesResponse, videosResponse] = await Promise.all([
             MediaLibrary.getAssetsAsync({
               album: album.id,
               mediaType: "photo",
+              first: 1, 
+              sortBy: [MediaLibrary.SortBy.modificationTime],
             }),
             MediaLibrary.getAssetsAsync({
               album: album.id,
               mediaType: "video",
+              first: 1, 
+              sortBy: [MediaLibrary.SortBy.modificationTime], 
             }),
           ]);
-
-          const sortedAlbumFiles = [...images.assets, ...videos.assets].sort(
-            (a, b) => b.modificationTime - a.modificationTime
-          );
-
+  
+          const mostRecentInAlbum = [
+            ...imagesResponse.assets,
+            ...videosResponse.assets,
+          ].sort((a, b) => b.modificationTime - a.modificationTime);
+  
           return {
             ...album,
-            cover: sortedAlbumFiles[0]?.uri || null,
-            totalImages: images?.totalCount,
-            totalVideos: videos?.totalCount,
+            cover: mostRecentInAlbum[0]?.uri || null, 
+            totalImages: imagesResponse.totalCount,
+            totalVideos: videosResponse.totalCount,
           };
         })
       );
-
+  
       setAlbums([allFilesAlbum, ...updatedAlbums]);
     } catch (error) {
       console.error("Error fetching albums:", error);
