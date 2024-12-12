@@ -17,6 +17,8 @@ import GalleryDashboard from "../Gallery";
 import AlbumImage from '../Gallery/components/AlbumImage';
 import Profile from "../profile/index";
 import StatusSaver from '../StatusSaver';
+import PaymentRecevie from '../paymentReceive';
+import AudioToVideo from '../AudioToVideo';
 const Drawer = createDrawerNavigator();
 
 
@@ -26,9 +28,10 @@ const CustomDrawerContent = (props) => {
     { name: "Profile", icon: "account-circle" }, 
     { name: "Gallery", icon: "view-gallery" }, 
     { name: "AvDownload", icon: "download" }, 
-    // { name: "AudioToVideo", icon: "audio-video" }, 
+    { name: "AudioToVideo", icon: "audio-video" }, 
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
+    { name: "PaymentRecevie", icon: "bank-transfer-in" }, 
   ];
 
 
@@ -87,8 +90,9 @@ const NavBar = (props) => {
       <Drawer.Screen name="AvDownload" component={AvDownload}  />
       <Drawer.Screen name="StatusSaver" component={StatusSaver}  />
       <Drawer.Screen name="CallLogScreen" component={CallLogScreen} />
+      <Drawer.Screen name="PaymentRecevie" component={PaymentRecevie} />
 
-      {/* <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  /> */}
+      <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  />
       {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
     </Drawer.Navigator>
   );

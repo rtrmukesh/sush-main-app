@@ -1,22 +1,23 @@
-import { LinearGradient } from 'expo-linear-gradient'; 
-import * as MediaLibrary from 'expo-media-library'; 
+import { LinearGradient } from 'expo-linear-gradient';
+import * as MediaLibrary from 'expo-media-library';
 import React, { useEffect, useState } from 'react';
 import {
+    Dimensions,
     FlatList,
     Image,
+    Modal,
     Platform,
     Text,
     ToastAndroid,
     TouchableOpacity,
-    View,
-    Modal,
-    Dimensions
+    View
 } from 'react-native';
+import ManageExternalStorage from 'react-native-external-storage-permission';
 import RNFS from 'react-native-fs';
-import { MaterialCommunityIcons } from 'react-native-vector-icons'; 
-import Video from 'react-native-video'; 
-import PermissionService from '../../../services/PermissionService';
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
+import Video from 'react-native-video';
 import Media from '../../lib/Media';
+
 
 const StatusSaver = () => {
     const [statusList, setStatusList] = useState([]);
@@ -38,7 +39,7 @@ const StatusSaver = () => {
     const getStatuses = async () => {
         setRefresh(true);
 
-        const hasPermission = await PermissionService.getStatusPermisson();
+        const hasPermission = await ManageExternalStorage.checkAndGrantPermission();
 
         if (!hasPermission) {
             console.warn('Permission denied!');
