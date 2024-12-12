@@ -1,16 +1,17 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
-// import { ProcessingManager } from 'react-native-video-processing'; // Import ProcessingManager
-import React, { useEffect, useState } from 'react';
+import { FFmpegKit } from 'ffmpeg-kit-react-native';
+import React, { useState } from 'react';
 import { Alert, LayoutAnimation, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import RNFS from 'react-native-fs';
 
+// Enable LayoutAnimation on Android
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const AudioToVideo = (props) => {
+const AudioToVideo = () => {
   const [videoFiles, setVideoFiles] = useState([]);
   const [isGridView, setIsGridView] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
@@ -41,35 +42,51 @@ const AudioToVideo = (props) => {
     }
   };
 
+
   const convertVideos = async () => {
     setIsConverting(true);
-    const outputDir = `${FileSystem.documentDirectory}Output`;
-
-    const dirInfo = await FileSystem.getInfoAsync(outputDir);
-    if (!dirInfo.exists) {
-      await FileSystem.makeDirectoryAsync(outputDir, { intermediates: true });
-    }
-
-    for (const video of videoFiles) {
-      const { uri } = video;
-      const filename = uri.split('/').pop();
-      const outputFilePath = `${outputDir}/${filename.split('.').slice(0, -1).join('.')}_audio.m4a`; // Output audio file path
-
+    const outputDir = `${RNFS.ExternalStorageDirectoryPath}/SushAudio`;
+    const dirInfo = await RNFS.stat(outputDir).catch(() => null);
+    if (!dirInfo) {
       try {
-        // const result = await ProcessingManager.extractAudio(uri, outputFilePath); // Use extractAudio method
-        // if (result.status === 'success') {
-        //   console.log(`Audio extracted: ${outputFilePath}`);
-        // } else {
-        //   console.error(`Failed to extract audio: ${result.error}`);
-        // }
+        await RNFS.mkdir(outputDir);
       } catch (error) {
-        console.error(`Error extracting audio: ${error.message}`);
+        console.error('Error creating directory:', error);
+        Alert.alert('Error', 'Failed to create the directory.');
+        setIsConverting(false);
+        return;
       }
     }
 
+    for (let i = 0; i < videoFiles.length; i++) {
+      const video = videoFiles[i];
+      const { uri } = video;
+      const filename = uri.split('/').pop();
+      const outputFilePath = `${outputDir}/${filename.split('.').slice(0, -1).join('.')}_audio.m4a`;
+
+      try {
+        const command = `-y -i ${uri} -vn -acodec copy ${outputFilePath}`;
+
+        const session = await FFmpegKit.execute(command);
+
+        const returnCode = await session.getReturnCode();
+
+        const isLastIndex = i === videoFiles.length - 1;
+
+        if (isLastIndex) {
+          if (returnCode.isValueSuccess()) {
+            Alert.alert('Success', `Video To Audio Converted Successfully`);
+          } else {
+            Alert.alert('Error', 'Failed to extract audio from video.');
+          }
+        }
+      } catch (error) {
+        Alert.alert('Error', 'Failed to extract audio from video.');
+      }
+    }
     setIsConverting(false);
-    Alert.alert('Conversion Complete', 'All videos have been converted to audio.');
   };
+
 
   const deleteVideo = (uri) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -88,7 +105,6 @@ const AudioToVideo = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Video Converter App</Text>
       <TouchableOpacity style={styles.addButton} onPress={pickVideo}>
         <Text style={styles.addButtonText}>Select or Browse Videos</Text>
       </TouchableOpacity>
@@ -106,6 +122,7 @@ const AudioToVideo = (props) => {
           </>
         )}
       </View>
+
       {isGridView ? (
         <ScrollView contentContainerStyle={styles.gridContainer}>
           {videoFiles.map((item, index) => (
@@ -146,6 +163,7 @@ const AudioToVideo = (props) => {
           ))}
         </View>
       )}
+
       {videoFiles.length > 0 && (
         <TouchableOpacity style={styles.convertButton} onPress={convertVideos} disabled={isConverting}>
           <Text style={styles.convertButtonText}>{isConverting ? 'Converting...' : 'Convert'}</Text>
@@ -154,6 +172,7 @@ const AudioToVideo = (props) => {
     </View>
   );
 };
+
 export default AudioToVideo;
 
 const styles = StyleSheet.create({
@@ -259,28 +278,25 @@ const styles = StyleSheet.create({
   },
   deleteButtonGrid: {
     position: 'absolute',
-    bottom: 5,
     right: 5,
+    top: 5,
   },
   convertButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#28a745',
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
     width: '100%',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
   },
   convertButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    width: '100%',
+    textAlign: 'center',
   },
 });
