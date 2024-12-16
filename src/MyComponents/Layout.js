@@ -1,28 +1,29 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
   Dimensions,
   SafeAreaView,
+  ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'; // You can use any icon library
 
 const { width } = Dimensions.get("window");
 
 const Layout = (props) => {
-  let { HeaderLabel="Mukesh Profile", footerContent, children, onBackPress, onSettingsPress, showFooter=true, showStatusBar=true, showHeader=true, showSetting } = props;
+  let { HeaderLabel="Mukesh Profile", footerContent, children, onBackPress, onSettingsPress, showFooter=true, showStatusBar=true, showHeader=true, showSetting, icon=false } = props;
   let navigation = useNavigation();
 
 
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* ✴---StatusBar---✴ */}
-      {showStatusBar && <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />}
+      {showStatusBar && <StatusBar barStyle="dark-content" backgroundColor="#A3D700" />}
 
       {/* ✴---Container---✴ */}
       <View style={styles.container}>
@@ -37,7 +38,7 @@ const Layout = (props) => {
           <Text style={styles.headerText}>{HeaderLabel}</Text>
 
           <TouchableOpacity onPress={ showSetting ? () => onSettingsPress():()=>{}} style={styles.iconContainer}>
-            {showSetting && <Icon name="settings" size={24} color="black" />}
+            {showSetting &&  <MaterialCommunityIcons name={icon ? icon :"settings"} size={24} color="black" />}
           </TouchableOpacity>
         </View>}
 
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
+    backgroundColor:"#A3D700"
   },
   headerText: {
     fontSize: width > 600 ? 24 : 18,

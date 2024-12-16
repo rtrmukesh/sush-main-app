@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,40 +9,61 @@ import {
 } from 'react-native';
 import { TextInput, Button, Text, Card, Title, Divider } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
+import AsyncStorage from '../../lib/AsyncStorage';
+import { useNavigation } from '@react-navigation/native';
+import ArrayList from '../../lib/ArrayList';
+
+const STORAGE_KEY = "accounts";
+
 
 const PaymentRecevie = () => {
   const [amount, setAmount] = useState('');
   const [qrCodeValue, setQrCodeValue] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+
+  let navigation = useNavigation()
+
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        let paymentArray = await AsyncStorage.getJSONItem(STORAGE_KEY);
+        setAccounts(paymentArray || []);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+
+    fetchAccounts();
+  }, []);
 
   const handleAmountChange = (input) => {
     setAmount(input);
   };
 
-  const generateQRCode = () => {
-    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-      Alert.alert('Invalid amount', 'Please enter a valid amount.');
-      return;
+  const generateQRCode = async () => {
+    if (!ArrayList.isArray(accounts)) {
+      Alert.alert(
+        "Missing",
+        "Plese Add Bank Account",
+        [
+          {
+            text: "Add",
+            onPress: () => {
+              navigation.navigate("Setting");
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        Alert.alert("Invalid amount", "Please enter a valid amount.");
+        return;
+      }
     }
 
-    let paymentArray = [
-      {
-        upi_id: '9786587013@ybl',
-        recipient_name: 'Mukesh MLS',
-        bank_name: 'Bank of Baroda',
-      },
-      {
-        upi_id: '1234567890@hdfcbank',
-        recipient_name: 'John Doe',
-        bank_name: 'HDFC Bank',
-      },
-      {
-        upi_id: '1112223334@icici',
-        recipient_name: 'Jane Smith',
-        bank_name: 'ICICI Bank',
-      },
-    ];
-
-    let loopedData = paymentArray.map((payment) => {
+    let loopedData = accounts.map((payment) => {
       const { upi_id, recipient_name } = payment;
       const formattedAmount = parseFloat(amount).toFixed(2);
       const qrData = `upi://pay?pa=${upi_id}&pn=${recipient_name}&mc=${formattedAmount}&am=${amount}&tid=txn${Date.now()}&cu=INR&url=`;
@@ -100,17 +121,17 @@ const PaymentRecevie = () => {
 
       {qrCodeValue.length > 0 && (
         <FlatList
-        data={qrCodeValue}
-        renderItem={renderQRCodeItem}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.flatListContainer}
-        snapToAlignment="center"
-        snapToInterval={Dimensions.get('window').width - 40} // Adjust the width here
-        decelerationRate="fast"
-      />
-      
+          data={qrCodeValue}
+          renderItem={renderQRCodeItem}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.flatListContainer}
+          snapToAlignment="center"
+          snapToInterval={Dimensions.get('window').width - 40} // Adjust the width here
+          decelerationRate="fast"
+        />
+
       )}
     </ScrollView>
   );
