@@ -19,6 +19,7 @@ import Profile from "../profile/index";
 import StatusSaver from '../StatusSaver';
 import PaymentRecevie from '../paymentReceive';
 import AudioToVideo from '../AudioToVideo';
+import Setting from '../Setting';
 const Drawer = createDrawerNavigator();
 
 
@@ -32,6 +33,7 @@ const CustomDrawerContent = (props) => {
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
     { name: "PaymentRecevie", icon: "bank-transfer-in" }, 
+    { name: "Setting", icon: "cookie-settings-outline" }, 
   ];
 
 
@@ -49,7 +51,7 @@ const CustomDrawerContent = (props) => {
           marginBottom: 2,
         }}
       >
-        <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+        <StatusBar barStyle="dark-content" backgroundColor="#A3D700" />
         <View style={{ alignItems: "center", width: 100 }}>
           <Image
             source={require("../../../assets/images/sm.jpg")}
@@ -82,7 +84,12 @@ const CustomDrawerContent = (props) => {
 
 const NavBar = (props) => {
   return (
-    <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
+    <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props}  />}
+    screenOptions={{
+      headerStyle: { backgroundColor: '#A3D700' }, 
+      headerTintColor: 'black', 
+    }}
+    >
       <Drawer.Screen name="Dashboard" component={Dashboard} />
       <Drawer.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
       <Drawer.Screen name="Gallery" component={GalleryDashboard} options={{ headerShown: false }} />
@@ -93,7 +100,7 @@ const NavBar = (props) => {
       <Drawer.Screen name="PaymentRecevie" component={PaymentRecevie} />
 
       <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  />
-      {/* <Drawer.Screen name="ImageCarousel" component={ImageCarousel} /> */}
+      <Drawer.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
     </Drawer.Navigator>
   );
 };
