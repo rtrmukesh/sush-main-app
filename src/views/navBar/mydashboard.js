@@ -6,10 +6,6 @@ import React from "react";
 import { Image, StatusBar, Text, View } from "react-native";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
 import Dashboard from "../dashboard/Dashboard";
-// import CCTVPage from "../Cctv";
-// import CameraExample from "../samsungCameraIssue";
-// import CheckMobileNumber from "../checkMobBusyOrNot";
-// import ImageCarousel from "../imageCarousel";
 import { version } from "../../../package.json";
 import AvDownload from '../AvDownload';
 import CallLogScreen from '../CallLog';
@@ -20,6 +16,7 @@ import StatusSaver from '../StatusSaver';
 import PaymentRecevie from '../paymentReceive';
 import AudioToVideo from '../AudioToVideo';
 import Setting from '../Setting';
+import HiddenFileScreen from '../hiddenFile';
 const Drawer = createDrawerNavigator();
 
 
@@ -33,7 +30,8 @@ const CustomDrawerContent = (props) => {
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
     { name: "PaymentRecevie", icon: "bank-transfer-in" }, 
-    { name: "Setting", icon: "cookie-settings-outline" }, 
+    { name: "HiddenFile", icon: "lock" }, 
+    { name: "Setting", icon: "cellphone-settings" }, 
   ];
 
 
@@ -98,9 +96,9 @@ const NavBar = (props) => {
       <Drawer.Screen name="StatusSaver" component={StatusSaver}  />
       <Drawer.Screen name="CallLogScreen" component={CallLogScreen} />
       <Drawer.Screen name="PaymentRecevie" component={PaymentRecevie} />
-
       <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  />
       <Drawer.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
+      <Drawer.Screen name="HiddenFile" component={HiddenFileScreen} options={{ headerShown: false }} />
     </Drawer.Navigator>
   );
 };

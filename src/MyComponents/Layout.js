@@ -12,11 +12,12 @@ import {
   View,
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'; // You can use any icon library
+import ArrayList from "../lib/ArrayList";
 
 const { width } = Dimensions.get("window");
 
 const Layout = (props) => {
-  let { HeaderLabel="Mukesh Profile", footerContent, children, onBackPress, onSettingsPress, showFooter=true, showStatusBar=true, showHeader=true, showSetting, icon=false } = props;
+  let { HeaderLabel = "Mukesh Profile", footerContent, children, onBackPress, showFooter = true, showStatusBar = true, showHeader = true, actionMenu = [] } = props;
   let navigation = useNavigation();
 
 
@@ -29,17 +30,23 @@ const Layout = (props) => {
       <View style={styles.container}>
 
         {/* ✴---Header with Back Icon, Title, and Settings Icon---✴ */}
-     {showHeader && <View style={styles.header}>
-          <TouchableOpacity onPress={()=> onBackPress ? onBackPress() : navigation.goBack() } style={styles.iconContainer}>
-          <Icon name="arrow-back" size={24} color="black" />
+        {showHeader && <View style={styles.header}>
+          <TouchableOpacity onPress={() => onBackPress ? onBackPress() : navigation.goBack()} style={styles.iconContainer}>
+            <Icon name="arrow-back" size={24} color="black" />
 
           </TouchableOpacity>
 
           <Text style={styles.headerText}>{HeaderLabel}</Text>
 
-          <TouchableOpacity onPress={ showSetting ? () => onSettingsPress():()=>{}} style={styles.iconContainer}>
-            {showSetting &&  <MaterialCommunityIcons name={icon ? icon :"settings"} size={24} color="black" />}
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
+            {ArrayList.isArray(actionMenu) && actionMenu.map((menu) =>
+              <TouchableOpacity onPress={menu?.onPress ? () => menu?.onPress() : () => { }} style={styles.iconContainer}>
+                <MaterialCommunityIcons name={menu?.icon ? menu?.icon : "settings"} size={24} color="black" />
+                <Text style={styles.label}>
+                  {menu?.label ? menu?.label : "Add"}
+                </Text>
+              </TouchableOpacity>)}
+          </View>
         </View>}
 
         {/* ✴---Body---✴ */}
@@ -59,6 +66,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "gray",
   },
+  label: {
+    fontSize: 7, 
+    color: 'black',
+    textAlign: 'center',
+  },
   container: {
     flex: 1,
     flexDirection: "column",
@@ -71,16 +83,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
-    backgroundColor:"#A3D700"
+    backgroundColor: "#A3D700"
   },
   headerText: {
     fontSize: width > 600 ? 24 : 18,
     fontWeight: 'bold',
     textAlign: "center",
-    color:"#192838"
+    color: "#192838"
   },
   iconContainer: {
-    width: 40,  
+    width: 40,
     alignItems: "center",
   },
   body: {
