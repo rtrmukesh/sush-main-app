@@ -17,6 +17,7 @@ import StatusSaver from './src/views/StatusSaver';
 import CallLogScreen from './src/views/CallLog';
 import PaymentRecevie from './src/views/paymentReceive';
 import Setting from './src/views/Setting';
+import HiddenFileScreen from './src/views/hiddenFile';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           <Stack.Screen name="StatusSaver" component={StatusSaver} />
           <Stack.Screen name="CallLogScreen" component={CallLogScreen} />
           <Stack.Screen name="PaymentRecevie" component={PaymentRecevie} />
+          <Stack.Screen name="HiddenFile" component={HiddenFileScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

@@ -108,8 +108,18 @@ const Setting = () => {
       </View>
     </Swipeable>
   );
+  
+  let actionMenu=[
+    {
+      onPress:()=>{
+        toggleModal()
+      },
+      icon:"plus"
+    }
+  ]
+
   return (
-    <Layout HeaderLabel="Setting" showHeader showSetting icon="plus" onSettingsPress={() => toggleModal()}>
+    <Layout HeaderLabel="Setting" showHeader  actionMenu={actionMenu} >
       {/* FlatList for Accounts */}
       <FlatList
         data={accounts}
