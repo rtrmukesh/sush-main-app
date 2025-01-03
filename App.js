@@ -18,6 +18,7 @@ import CallLogScreen from './src/views/CallLog';
 import PaymentRecevie from './src/views/paymentReceive';
 import Setting from './src/views/Setting';
 import HiddenFileScreen from './src/views/hiddenFile';
+// import ClockScreen from './src/views/ClockScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
           <Stack.Screen name="CallLogScreen" component={CallLogScreen} />
           <Stack.Screen name="PaymentRecevie" component={PaymentRecevie} />
           <Stack.Screen name="HiddenFile" component={HiddenFileScreen} />
+          {/* <Stack.Screen name="Clock" component={ClockScreen} /> */}
 
         </Stack.Navigator>
       </NavigationContainer>

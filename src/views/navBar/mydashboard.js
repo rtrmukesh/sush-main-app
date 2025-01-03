@@ -17,6 +17,7 @@ import PaymentRecevie from '../paymentReceive';
 import AudioToVideo from '../AudioToVideo';
 import Setting from '../Setting';
 import HiddenFileScreen from '../hiddenFile';
+import ClockScreen from '../PushNotification';
 const Drawer = createDrawerNavigator();
 
 
@@ -29,9 +30,10 @@ const CustomDrawerContent = (props) => {
     { name: "AudioToVideo", icon: "audio-video" }, 
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
+    { name: "Clock", icon: "alarm" }, 
     { name: "PaymentRecevie", icon: "bank-transfer-in" }, 
     { name: "HiddenFile", icon: "lock" }, 
-    { name: "Setting", icon: "cellphone-settings" }, 
+    // { name: "Setting", icon: "cellphone-settings" }, 
   ];
 
 
@@ -99,6 +101,7 @@ const NavBar = (props) => {
       <Drawer.Screen name="AudioToVideo" component={AudioToVideo}  />
       <Drawer.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
       <Drawer.Screen name="HiddenFile" component={HiddenFileScreen} options={{ headerShown: false }} />
+      {/* <Drawer.Screen name="Clock" component={ClockScreen} options={{ headerShown: false }} /> */} 
     </Drawer.Navigator>
   );
 };
