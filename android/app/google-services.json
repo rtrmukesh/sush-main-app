@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1072986798436",
+    "project_id": "sush-main-app",
+    "storage_bucket": "sush-main-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072986798436:android:1dd2eb22d9b351dd6ea271",
+        "android_client_info": {
+          "package_name": "com.sush.mainapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlpHaZoBYSFn8S4xz-eHcJM4vNbQ_wLbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
