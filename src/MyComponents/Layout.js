@@ -17,7 +17,7 @@ import ArrayList from "../lib/ArrayList";
 const { width } = Dimensions.get("window");
 
 const Layout = (props) => {
-  let { HeaderLabel = "Mukesh Profile", footerContent, children, onBackPress, showFooter = true, showStatusBar = true, showHeader = true, actionMenu = [] } = props;
+  let { HeaderLabel = "Mukesh Profile", footerContent, children, onBackPress, showFooter = true, showStatusBar = true, showHeader = true, actionMenu = [],handleHeaderClick } = props;
   let navigation = useNavigation();
 
 
@@ -36,7 +36,7 @@ const Layout = (props) => {
 
           </TouchableOpacity>
 
-          <Text style={styles.headerText}>{HeaderLabel}</Text>
+          <Text onPress={() => handleHeaderClick && handleHeaderClick()} style={styles.headerText}>{HeaderLabel}</Text>
 
           <View style={{ flexDirection: "row" }}>
             {ArrayList.isArray(actionMenu) && actionMenu.map((menu) =>
