@@ -165,7 +165,9 @@ const HiddenFileScreen = () => {
                 name: fileName,
                 oldPath: file.realPath,
               });
-              await RNFS.unlink(file.realPath);
+              await RNFS.unlink(file.realPath).then((res)=>{
+                RNFS.scanFile(file.realPath);
+              });
             } else {
               console.error(`Failed to copy file to: ${newPath}`);
             }

@@ -26,14 +26,14 @@ const CustomDrawerContent = (props) => {
     { name: "Dashboard", icon: "home" }, 
     { name: "Profile", icon: "account-circle" }, 
     { name: "Gallery", icon: "view-gallery" }, 
-    { name: "AvDownload", icon: "download" }, 
+    // { name: "AvDownload", icon: "download" }, 
     { name: "AudioToVideo", icon: "audio-video" }, 
     { name: "StatusSaver", icon: "whatsapp" }, 
     { name: "CallLogScreen", icon: "phone-log" }, 
-    { name: "Clock", icon: "alarm" }, 
+    // { name: "Clock", icon: "alarm" }, 
     { name: "PaymentRecevie", icon: "bank-transfer-in" }, 
     { name: "HiddenFile", icon: "lock" }, 
-    // { name: "Setting", icon: "cellphone-settings" }, 
+    { name: "Setting", icon: "cellphone-settings" }, 
   ];
 
 
