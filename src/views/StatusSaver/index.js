@@ -17,6 +17,8 @@ import RNFS from 'react-native-fs';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import Video from 'react-native-video';
 import Media from '../../lib/Media';
+import Layout from '../../MyComponents/Layout';
+const { width, height } = Dimensions.get("window");
 
 
 const StatusSaver = () => {
@@ -130,9 +132,14 @@ const StatusSaver = () => {
     }, []);
 
     return (
+        <Layout
+        HeaderLabel={"Status Saver"}
+        showBackButton={true}
+        showFooter={false}
+      >
         <LinearGradient
             colors={['#6A11CB', '#2575FC']}
-            style={{ flex: 1 }}
+            style={{ flex: 1,height: height }}
         >
             <View style={{ flex: 1, padding: 15 }}>
                 <TouchableOpacity
@@ -319,6 +326,7 @@ const StatusSaver = () => {
                 </View>
             </Modal>
         </LinearGradient>
+        </Layout>
     );
 };
 

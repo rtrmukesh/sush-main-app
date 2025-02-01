@@ -12,6 +12,7 @@ import QRCode from 'react-native-qrcode-svg';
 import AsyncStorage from '../../lib/AsyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import ArrayList from '../../lib/ArrayList';
+import Layout from '../../MyComponents/Layout';
 
 const STORAGE_KEY = "accounts";
 
@@ -95,6 +96,11 @@ const PaymentRecevie = () => {
   );
 
   return (
+    <Layout
+    HeaderLabel={"Payment Recive QR Code"}
+    showBackButton={true}
+    showFooter={false}
+  >
     <ScrollView contentContainerStyle={styles.container}>
       <Card style={styles.card}>
         <Card.Content>
@@ -134,6 +140,7 @@ const PaymentRecevie = () => {
 
       )}
     </ScrollView>
+    </Layout>
   );
 };
 

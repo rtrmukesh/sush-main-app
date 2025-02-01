@@ -8,6 +8,7 @@ import {
 
 import CallLogs from 'react-native-call-log';
 import LogList from './components/LogList';
+import Layout from '../../MyComponents/Layout';
 
 const CallLogScreen = () => {
   const [listData, setListDate] = useState([]);
@@ -56,11 +57,17 @@ const CallLogScreen = () => {
 
 
   return (
+    <Layout
+    HeaderLabel={"Call Logs"}
+    showBackButton={true}
+    showFooter={false}
+  >
     <SafeAreaView style={styles.container}>
         <LogList
           data={listData}
         />
     </SafeAreaView>
+    </Layout>
   );
 };
 

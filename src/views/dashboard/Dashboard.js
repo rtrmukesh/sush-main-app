@@ -2,15 +2,21 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AddressCard from './components/AddressCard';
+import Layout from '../../MyComponents/Layout';
 
 const Dashboard = () => {
   return (
+    <Layout
+    HeaderLabel={"Dashbord"}
+    showBackButton={false}
+  >
     <View style={styles.container}>
       <Text style={[styles.hello,styles.text]}>Hello! <Text style={[styles.name,styles.text]}>Suganthi Mukesh</Text></Text>
       <View style={{marginTop:13}}>
       <AddressCard/>
       </View>
     </View>
+    </Layout>
   );
 };
 
@@ -29,7 +35,6 @@ fontSize:15
   },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     padding:11
   },
   text: {
