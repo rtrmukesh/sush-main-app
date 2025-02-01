@@ -5,6 +5,7 @@ import { FFmpegKit } from 'ffmpeg-kit-react-native';
 import React, { useState } from 'react';
 import { Alert, LayoutAnimation, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
 import RNFS from 'react-native-fs';
+import Layout from '../../MyComponents/Layout';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android') {
@@ -104,6 +105,10 @@ const AudioToVideo = () => {
   };
 
   return (
+    <Layout
+    HeaderLabel={"Audio Converter"}
+    showBackButton={true}
+  >
     <View style={styles.container}>
       <TouchableOpacity style={styles.addButton} onPress={pickVideo}>
         <Text style={styles.addButtonText}>Select or Browse Videos</Text>
@@ -170,6 +175,7 @@ const AudioToVideo = () => {
         </TouchableOpacity>
       )}
     </View>
+    </Layout>
   );
 };
 

@@ -17,7 +17,7 @@ import ArrayList from "../lib/ArrayList";
 const { width } = Dimensions.get("window");
 
 const Layout = (props) => {
-  let { HeaderLabel = "Mukesh Profile", footerContent, children, onBackPress, showFooter = true, showStatusBar = true, showHeader = true, actionMenu = [],handleHeaderClick } = props;
+  let { HeaderLabel = "Mukesh Profile", footerContent, children, onBackPress, showFooter = true, showStatusBar = true, showHeader = true, actionMenu = [],handleHeaderClick, showBackButton=true } = props;
   let navigation = useNavigation();
 
 
@@ -31,10 +31,10 @@ const Layout = (props) => {
 
         {/* ✴---Header with Back Icon, Title, and Settings Icon---✴ */}
         {showHeader && <View style={styles.header}>
-          <TouchableOpacity onPress={() => onBackPress ? onBackPress() : navigation.goBack()} style={styles.iconContainer}>
+        {showBackButton && <TouchableOpacity onPress={() => onBackPress ? onBackPress() : navigation.goBack()} style={styles.iconContainer}>
             <Icon name="arrow-back" size={24} color="black" />
 
-          </TouchableOpacity>
+          </TouchableOpacity>}
 
           <Text onPress={() => handleHeaderClick && handleHeaderClick()} style={styles.headerText}>{HeaderLabel}</Text>
 
