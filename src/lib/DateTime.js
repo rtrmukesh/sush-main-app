@@ -2,7 +2,7 @@
 import moment from "moment";
 
 
-class DatTime {
+class DateTime {
     static formatedDate(date) {
         return moment(date).format("DD-MMM-YYYY hh:mm A");
       }
@@ -24,4 +24,4 @@ class DatTime {
       };
 }
 
-export default DatTime
+export default DateTime
