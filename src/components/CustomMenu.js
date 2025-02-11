@@ -12,6 +12,7 @@ import Animated, {
 const { width, height } = Dimensions.get("window");
 
 const MENU_ITEMS = [
+  { route: "AudioCutter", label: "AudioCutter", icon: "content-cut" },
   { route: "Dashboard", label: "Dashboard", icon: "home" },
   { route: "Profile", label: "Profile", icon: "account-circle" },
   { route: "Gallery", label: "Gallery", icon: "view-gallery" },
@@ -111,6 +112,8 @@ const DashboardScreen = () => {
           alignItems: "center",
           top: height / 2 - (width * 2.1),
           left: width / 2 - (width * 0.4),
+          borderWidth: 2, // Set border width
+          borderColor: "white",
         }, animatedStyle]}>
           <FlatList
             data={MENU_ITEMS}
@@ -123,7 +126,7 @@ const DashboardScreen = () => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={{
-                  width: width / 3 - 20, // Ensures 3 items per row
+                  width: width / 3 - 30, // Ensures 3 items per row
                   alignItems: "center",
                   paddingVertical: 15,
                 }}
