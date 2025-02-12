@@ -22,6 +22,7 @@ const MENU_ITEMS = [
   { route: "CallLogScreen", label: "CallLog", icon: "phone-log" },
   // { route: "Clock", label:"Clock",icon: "alarm" }, 
   { route: "PaymentRecevie", label: "QR Pay", icon: "bank-transfer-in" },
+  { route: "Pinterest", label: "Pinterest", icon: "file-download" },
   { route: "HiddenFile", label: "HiddenFile", icon: "lock" },
   { route: "Setting", label: "Setting", icon: "cellphone-settings" },
 ];

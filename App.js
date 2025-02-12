@@ -21,6 +21,7 @@ import HiddenFileScreen from './src/views/hiddenFile';
 import DashboardScreen from './src/components/CustomMenu';
 import Dashboard from './src/views/dashboard/Dashboard';
 import AudioCutterScreen from './src/views/AudioCutter';
+import PinterestDownloader from './src/views/Pinterest';
 // import ClockScreen from './src/views/ClockScreen';
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ export default function App() {
           <Stack.Screen name="PaymentRecevie" component={PaymentRecevie} />
           <Stack.Screen name="HiddenFile" component={HiddenFileScreen} />
           <Stack.Screen name="AudioCutter" component={AudioCutterScreen} />
+          <Stack.Screen name="Pinterest" component={PinterestDownloader} />
           {/* <Stack.Screen name="Clock" component={ClockScreen} /> */}
 
         </Stack.Navigator>
