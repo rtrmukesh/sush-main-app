@@ -13,7 +13,6 @@ const { width, height } = Dimensions.get("window");
 
 const MENU_ITEMS = [
   { route: "AudioCutter", label: "AudioCutter", icon: "content-cut" },
-  { route: "AppHideScreen", label: "AppHideScreen", icon: "AppHideScreen" },
   { route: "Dashboard", label: "Dashboard", icon: "home" },
   { route: "Profile", label: "Profile", icon: "account-circle" },
   { route: "Gallery", label: "Gallery", icon: "view-gallery" },
